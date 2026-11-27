@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>법률피해 구제 센터 - 변호사 분쟁 맞춤형 가이드</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Pretendard -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Pretendard', 'Inter', sans-serif;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(12px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .modal-animate {
+            animation: modalFadeIn 0.22s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col selection:bg-blue-100 selection:text-blue-800">
+
+    <!-- Notification Toast (alert 대체) -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 max-w-md">
+        <i class="fa-solid fa-circle-check text-blue-400 text-lg shrink-0"></i>
+        <span id="toast-msg" class="text-xs sm:text-sm font-medium leading-snug"></span>
+    </div>
+
+    <!-- Top Navigation Bar (밝은 반투명 화이트 테마) -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#home" onclick="showMainView()" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-scale-balanced text-lg"></i>
+                </div>
+                <div>
+                    <span class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 block leading-tight">법률피해 구제 센터</span>
+                    <span class="text-xs text-slate-500 font-medium tracking-wide">변호사 분쟁 맞춤형 가이드</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold text-slate-600">
+                <a href="#home" onclick="showMainView()" class="hover:text-blue-600 transition-colors">홈</a>
+                <a href="#guide-section" onclick="showMainView()" class="hover:text-blue-600 transition-colors">상황별 맞춤 가이드</a>
+                <a href="#step-guide-section" onclick="showMainView()" class="hover:text-blue-600 transition-colors">진정 5단계 가이드</a>
+                <a href="#templates-section" onclick="showMainView()" class="hover:text-blue-600 transition-colors">공식 양식 자료실</a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="lg:hidden text-slate-700 hover:text-blue-600 p-2 text-xl focus:outline-none" aria-label="메뉴 열기">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-slate-200 px-6 py-4 space-y-3 shadow-xl">
+            <a href="#home" onclick="showMainView(); toggleMobileMenu();" class="block text-slate-700 hover:text-blue-600 py-1.5 font-semibold">홈</a>
+            <a href="#guide-section" onclick="showMainView(); toggleMobileMenu();" class="block text-slate-700 hover:text-blue-600 py-1.5 font-semibold">상황별 맞춤 가이드</a>
+            <a href="#step-guide-section" onclick="showMainView(); toggleMobileMenu();" class="block text-slate-700 hover:text-blue-600 py-1.5 font-semibold">진정 5단계 가이드</a>
+            <a href="#templates-section" onclick="showMainView(); toggleMobileMenu();" class="block text-slate-700 hover:text-blue-600 py-1.5 font-semibold">공식 양식 자료실</a>
+        </div>
+    </header>
+
+    <!-- Main View Container -->
+    <main id="app-container" class="flex-grow">
+        <!-- Main Landing View -->
+        <div id="main-view">
+            <!-- Hero Section (밝고 화사한 라이트 그라데이션) -->
+            <section id="home" class="relative overflow-hidden pt-16 pb-20 lg:pt-24 lg:pb-28 bg-gradient-to-b from-blue-50/90 via-sky-50/50 to-white border-b border-slate-200/80">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.12),transparent_60%)] pointer-events-none"></div>
+                <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-blue-200 text-blue-700 text-xs sm:text-sm font-bold mb-6 shadow-sm">
+                        <i class="fa-solid fa-shield-halved text-blue-600"></i> 투명하고 공정한 법률 서비스를 위한 피해 구제 솔루션
+                    </div>
+                    
+                    <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-snug sm:leading-tight max-w-4xl mx-auto">
+                        변호사와의 갈등피해<br />
+                        <span class="text-blue-600">이제 맞춤형 대응 가이드로 해결하세요</span>
+                    </h1>
+
+                    <p class="mt-5 text-sm sm:text-base lg:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                        착수금 미반환, 연락 두절, 성실의무 위반 등 변호사 관련 분쟁 피해 구제와<br class="hidden sm:inline" />
+                        관할 지방변호사회 징계 진정 절차를 한곳에서 명쾌하게 안내합니다.
+                    </p>
+
+                    <div class="mt-8 flex items-center justify-center">
+                        <a href="#guide-section" class="px-7 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold shadow-md shadow-blue-600/20 transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-compass"></i> 내 피해 유형 선택하기
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1. 상황별 맞춤 선택 섹션 (법률피해 구제 센터 기존 5가지 갈등 유형) -->
+            <section id="guide-section" class="py-16 lg:py-20 bg-white border-b border-slate-200/80">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-2xl mx-auto mb-10">
+                        <span class="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-bold tracking-wider uppercase mb-2">상황별 맞춤 선택</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">어떤 갈등이나 피해를 겪고 계신가요?</h2>
+                        <p class="text-sm text-slate-500 mt-2">해당하는 갈등 유형을 선택하시면 단계별 행동 요령과 증거 수집 체크리스트를 확인하실 수 있습니다.</p>
+                    </div>
+
+                    <!-- Vertical List Container -->
+                    <div class="space-y-3.5">
+                        <!-- Item 1 -->
+                        <div onclick="selectAndGoDetail(1)" class="cursor-pointer bg-slate-50/70 hover:bg-blue-50/60 border border-slate-200 hover:border-blue-400 rounded-2xl p-5 sm:p-6 transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-between group">
+                            <div class="flex items-center gap-4">
+                                <div class="w-11 h-11 rounded-xl bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-base transition-colors shrink-0">
+                                    <i class="fa-solid fa-won-sign"></i>
+                                </div>
+                                <div>
+                                    <span class="text-sm sm:text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors block">
+                                        1. 수임료/착수금 반환 및 정산 갈등
+                                    </span>
+                                    <span class="text-xs text-slate-500 mt-0.5 block">변호사와의 위임 계약 중도 해지 및 비용 정산 분쟁</span>
+                                </div>
+                            </div>
+                            <div class="w-9 h-9 rounded-full bg-white border border-slate-200 text-slate-500 group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:text-white flex items-center justify-center text-xs transition-colors shrink-0 shadow-xs">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </div>
+                        </div>
+
+                        <!-- Item 2 -->
+                        <div onclick="selectAndGoDetail(2)" class="cursor-pointer bg-slate-50/70 hover:bg-blue-50/60 border border-slate-200 hover:border-blue-400 rounded-2xl p-5 sm:p-6 transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-between group">
+                            <div class="flex items-center gap-4">
+                                <div class="w-11 h-11 rounded-xl bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-base transition-colors shrink-0">
+                                    <i class="fa-solid fa-user-slash"></i>
+                                </div>
+                                <div>
+                                    <span class="text-sm sm:text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors block">
+                                        2. 사건 방치 및 불성실한 변론
+                                    </span>
+                                    <span class="text-xs text-slate-500 mt-0.5 block">연락 두절, 재판 기일 불참, 서면 미제출 등 직무 태만</span>
+                                </div>
+                            </div>
+                            <div class="w-9 h-9 rounded-full bg-white border border-slate-200 text-slate-500 group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:text-white flex items-center justify-center text-xs transition-colors shrink-0 shadow-xs">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </div>
+                        </div>
+
+                        <!-- Item 3 -->
+                        <div onclick="selectAndGoDetail(3)" class="cursor-pointer bg-slate-50/70 hover:bg-blue-50/60 border border-slate-200 hover:border-blue-400 rounded-2xl p-5 sm:p-6 transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-between group">
+                            <div class="flex items-center gap-4">
+                                <div class="w-11 h-11 rounded-xl bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-base transition-colors shrink-0">
+                                    <i class="fa-solid fa-file-circle-exclamation"></i>
+                                </div>
+                                <div>
+                                    <span class="text-sm sm:text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors block">
+                                        3. 성실의무 위반 및 부실 변론
+                                    </span>
+                                    <span class="text-xs text-slate-500 mt-0.5 block">법리 검토 소홀, 핵심 증거 제출 누락, 상소기간 도과 등</span>
+                                </div>
+                            </div>
+                            <div class="w-9 h-9 rounded-full bg-white border border-slate-200 text-slate-500 group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:text-white flex items-center justify-center text-xs transition-colors shrink-0 shadow-xs">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </div>
+                        </div>
+
+                        <!-- Item 4 -->
+                        <div onclick="selectAndGoDetail(4)" class="cursor-pointer bg-slate-50/70 hover:bg-blue-50/60 border border-slate-200 hover:border-blue-400 rounded-2xl p-5 sm:p-6 transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-between group">
+                            <div class="flex items-center gap-4">
+                                <div class="w-11 h-11 rounded-xl bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-base transition-colors shrink-0">
+                                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                                </div>
+                                <div>
+                                    <span class="text-sm sm:text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors block">
+                                        4. 추가 비용 및 성공보수 무단 요구
+                                    </span>
+                                    <span class="text-xs text-slate-500 mt-0.5 block">최초 계약서 약정 외 부당한 금품 및 성공보수 청구</span>
+                                </div>
+                            </div>
+                            <div class="w-9 h-9 rounded-full bg-white border border-slate-200 text-slate-500 group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:text-white flex items-center justify-center text-xs transition-colors shrink-0 shadow-xs">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </div>
+                        </div>
+
+                        <!-- Item 5 -->
+                        <div onclick="selectAndGoDetail(5)" class="cursor-pointer bg-slate-50/70 hover:bg-blue-50/60 border border-slate-200 hover:border-blue-400 rounded-2xl p-5 sm:p-6 transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-between group">
+                            <div class="flex items-center gap-4">
+                                <div class="w-11 h-11 rounded-xl bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-base transition-colors shrink-0">
+                                    <i class="fa-solid fa-user-secret"></i>
+                                </div>
+                                <div>
+                                    <span class="text-sm sm:text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors block">
+                                        5. 비밀유지 위반 및 이해충돌
+                                    </span>
+                                    <span class="text-xs text-slate-500 mt-0.5 block">의뢰인 비밀 누설, 상대방 측 사건 수임 등 윤리 위반</span>
+                                </div>
+                            </div>
+                            <div class="w-9 h-9 rounded-full bg-white border border-slate-200 text-slate-500 group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:text-white flex items-center justify-center text-xs transition-colors shrink-0 shadow-xs">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. 변호사 진정 절차 5단계 가이드 섹션 (바른변호 통합 기능 1) -->
+            <section id="step-guide-section" class="py-16 lg:py-24 bg-slate-50 border-b border-slate-200/80">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto mb-12">
+                        <span class="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-bold text-xs tracking-wide uppercase mb-2">Step-by-Step Petition Guide</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">변호사 진정 절차 5단계 가이드</h2>
+                        <p class="text-slate-600 mt-2 text-sm sm:text-base">
+                            진정서 작성부터 접수, 조사 및 결과 통보까지 일반 이용자가 거쳐야 할 필수 단계를 알기 쉽게 정리했습니다.
+                        </p>
+                    </div>
+
+                    <!-- 5단계 카드 그리드 (5열) -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5" id="step-cards-container">
+                        <!-- 단계 1 -->
+                        <div class="step-guide-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all flex flex-col justify-between" data-keywords="01 1단계 진정 사유 확인 착수금 위임계약서 시효 3년">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="w-9 h-9 rounded-xl bg-blue-600 text-white font-bold text-sm flex items-center justify-center shadow-sm">01</span>
+                                    <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">1단계</span>
+                                </div>
+                                <h3 class="text-base font-bold text-slate-900 mb-2">진정 사유 확인</h3>
+                                <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                                    착수금 미반환, 기일 불출석, 연락 두절, 품위손상 등 변호사법 위반 여부와 징계 사유에 해당하는지 명확히 파악합니다.
+                                </p>
+                            </div>
+                            <div class="pt-3 border-t border-slate-100 text-xs text-blue-700 font-bold flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock"></i> 시효: 위반일로부터 3년 이내
+                            </div>
+                        </div>
+
+                        <!-- 단계 2 -->
+                        <div class="step-guide-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all flex flex-col justify-between" data-keywords="02 2단계 증거 자료 수집 이체 영수증 카톡 녹취 객관적 증빙자료">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="w-9 h-9 rounded-xl bg-blue-600 text-white font-bold text-sm flex items-center justify-center shadow-sm">02</span>
+                                    <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">2단계</span>
+                                </div>
+                                <h3 class="text-base font-bold text-slate-900 mb-2">증거 자료 수집</h3>
+                                <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                                    사건 위임계약서, 계좌이체 영수증, 통화 녹취, 답변 없는 카카오톡 및 문자메시지 내역을 시간순으로 철저히 준비합니다.
+                                </p>
+                            </div>
+                            <div class="pt-3 border-t border-slate-100 text-xs text-slate-700 font-bold flex items-center gap-1.5">
+                                <i class="fa-solid fa-folder-open text-blue-600"></i> 핵심: 객관적 증빙자료 확보
+                            </div>
+                        </div>
+
+                        <!-- 단계 3 -->
+                        <div class="step-guide-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all flex flex-col justify-between" data-keywords="03 3단계 관할 변호사회 접수 방문 우편 온라인 전액 무료">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="w-9 h-9 rounded-xl bg-blue-600 text-white font-bold text-sm flex items-center justify-center shadow-sm">03</span>
+                                    <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">3단계</span>
+                                </div>
+                                <h3 class="text-base font-bold text-slate-900 mb-2">관할 변호사회 접수</h3>
+                                <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                                    피진정 변호사가 소속된 지방변호사회(예: 서울지방변호사회 등)에 표준 진정서를 방문, 우편 또는 온라인으로 제출합니다.
+                                </p>
+                            </div>
+                            <div class="pt-3 border-t border-slate-100 text-xs text-emerald-700 font-bold flex items-center gap-1.5">
+                                <i class="fa-solid fa-Won-sign"></i> 접수 비용: 전액 무료
+                            </div>
+                        </div>
+
+                        <!-- 단계 4 -->
+                        <div class="step-guide-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all flex flex-col justify-between" data-keywords="04 4단계 조사 및 심의 위원회 소명 변협 소요 기간 2~4개월">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="w-9 h-9 rounded-xl bg-blue-600 text-white font-bold text-sm flex items-center justify-center shadow-sm">04</span>
+                                    <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">4단계</span>
+                                </div>
+                                <h3 class="text-base font-bold text-slate-900 mb-2">조사 및 심의</h3>
+                                <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                                    지방회 조사위원회의 사실조사와 변호사 소명 절차를 거쳐 징계 사유가 인정되면 대한변호사협회 징계위원회로 회부됩니다.
+                                </p>
+                            </div>
+                            <div class="pt-3 border-t border-slate-100 text-xs text-slate-700 font-bold flex items-center gap-1.5">
+                                <i class="fa-solid fa-hourglass-half text-blue-600"></i> 소요 기간: 통상 2~4개월
+                            </div>
+                        </div>
+
+                        <!-- 단계 5 -->
+                        <div class="step-guide-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all flex flex-col justify-between" data-keywords="05 5단계 결과 통보 및 이의신청 법무부 징계 불복 기한 30일">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="w-9 h-9 rounded-xl bg-blue-600 text-white font-bold text-sm flex items-center justify-center shadow-sm">05</span>
+                                    <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">5단계</span>
+                                </div>
+                                <h3 class="text-base font-bold text-slate-900 mb-2">결과 통보 및 이의신청</h3>
+                                <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                                    징계 결정(견책·과태료·정직 등) 또는 기각 결과가 통보됩니다. 불복 시 30일 이내에 법무부 징계위원회에 이의신청이 가능합니다.
+                                </p>
+                            </div>
+                            <div class="pt-3 border-t border-slate-100 text-xs text-amber-700 font-bold flex items-center gap-1.5">
+                                <i class="fa-solid fa-triangle-exclamation"></i> 불복 기한: 30일 이내
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. 공식 양식 자료실 섹션 (바른변호 통합 기능 2) -->
+            <section id="templates-section" class="py-16 lg:py-24 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto mb-12">
+                        <span class="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-600 font-bold text-xs tracking-wide uppercase mb-2">Official Forms & Links</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">공식 양식 자료실 및 기관 바로가기</h2>
+                        <p class="text-slate-600 mt-2 text-sm sm:text-base">
+                            지방변호사회 제출용 표준 진정서 양식과 내용증명용 위임계약 해지 최고서 문안을 즉시 미리보고 복사·다운로드하세요.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- 양식 카드 1: 표준 진정서 양식 -->
+                        <div class="bg-slate-50 rounded-3xl p-7 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-blue-300 hover:shadow-md transition-all">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="px-3 py-1 rounded-lg bg-blue-600 text-white text-xs font-bold">필수 서식</span>
+                                    <span class="text-xs font-medium text-slate-500">지방회 제출용</span>
+                                </div>
+                                <h3 class="text-lg font-extrabold text-slate-900 mb-2">변호사 징계 진정서 표준 양식</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                                    진정인·피진정 변호사 인적사항, 진정 취지 및 위반 사실(사건 위임 경위, 위법·부당 행위, 결론), 입증 방법을 체계적으로 기재하는 공식 표준 서식입니다.
+                                </p>
+                            </div>
+                            <div class="space-y-2">
+                                <button onclick="openTemplateModal('petition')" class="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition-colors flex items-center justify-center gap-2 shadow-sm">
+                                    <i class="fa-solid fa-eye"></i> 양식 미리보기 및 복사
+                                </button>
+                                <button onclick="downloadTemplateTxt('petition')" class="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold transition-colors flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-download text-blue-600"></i> 표준 진정서 (.txt) 다운로드
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 양식 카드 2: 위임계약 해지 최고서 -->
+                        <div class="bg-slate-50 rounded-3xl p-7 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-blue-300 hover:shadow-md transition-all">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="px-3 py-1 rounded-lg bg-sky-100 text-sky-800 text-xs font-bold">사전 조치</span>
+                                    <span class="text-xs font-medium text-slate-500">내용증명용</span>
+                                </div>
+                                <h3 class="text-lg font-extrabold text-slate-900 mb-2">위임계약 해지 및 반환 최고서</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                                    진정 접수 전 변호사 측에 공식적으로 위임계약 해지 의사를 통보하고 미수행 착수금 반환을 요구하는 우체국 내용증명 표준 문안입니다.
+                                </p>
+                            </div>
+                            <div class="space-y-2">
+                                <button onclick="openTemplateModal('demand')" class="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition-colors flex items-center justify-center gap-2 shadow-sm">
+                                    <i class="fa-solid fa-eye"></i> 최고서 문안 미리보기 및 복사
+                                </button>
+                                <button onclick="downloadTemplateTxt('demand')" class="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold transition-colors flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-download text-blue-600"></i> 해지 최고서 (.txt) 다운로드
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 카드 3: 공식 기관 바로가기 -->
+                        <div class="bg-slate-50 rounded-3xl p-7 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-blue-300 hover:shadow-md transition-all">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="px-3 py-1 rounded-lg bg-slate-200 text-slate-700 text-xs font-bold">공식 기관</span>
+                                    <span class="text-xs font-medium text-slate-500">외부 연계</span>
+                                </div>
+                                <h3 class="text-lg font-extrabold text-slate-900 mb-2">대한변협 및 지방변호사회</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed mb-5">
+                                    피진정 변호사의 정확한 등록 소속 지방회를 조회하고 온라인 민원 및 징계 진정 접수처를 확인하실 수 있습니다.
+                                </p>
+                            </div>
+                            <div class="space-y-2.5 pt-2">
+                                <a href="https://www.koreanbar.or.kr" target="_blank" rel="noopener noreferrer" class="w-full py-3 px-4 rounded-xl bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 text-slate-800 text-xs font-bold transition-all flex items-center justify-between shadow-xs">
+                                    <span>대한변호사협회 공식 홈페이지</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-blue-600"></i>
+                                </a>
+                                <a href="https://www.seoulbar.or.kr" target="_blank" rel="noopener noreferrer" class="w-full py-3 px-4 rounded-xl bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 text-slate-800 text-xs font-bold transition-all flex items-center justify-between shadow-xs">
+                                    <span>서울지방변호사회 (조사과 안내)</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-blue-600"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Detail Page View (상황별 맞춤 선택 클릭 시 전환되는 상세 뷰) -->
+        <div id="detail-view" class="hidden py-12 bg-slate-50">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Back Button Header -->
+                <div class="mb-8 flex items-center justify-between">
+                    <button onclick="showMainView()" class="bg-white hover:bg-slate-100 text-slate-700 px-5 py-2.5 rounded-xl text-sm font-bold transition-all border border-slate-200 flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-arrow-left text-blue-600"></i> 메인으로 돌아가기
+                    </button>
+                    <span class="text-xs text-slate-500 font-semibold bg-white px-3 py-1.5 rounded-lg border border-slate-200">맞춤 대응 가이드 상세 페이지</span>
+                </div>
+
+                <!-- Dynamic Detail Content Box -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 shadow-lg transition-all">
+                    <div class="flex items-center gap-4 mb-8 pb-6 border-b border-slate-100">
+                        <div id="detail-icon" class="w-14 h-14 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-2xl shadow-md shadow-blue-600/20 shrink-0">
+                            <!-- Icon -->
+                        </div>
+                        <div>
+                            <span class="text-xs text-blue-600 font-bold tracking-wide uppercase">선택된 피해 유형 맞춤 솔루션</span>
+                            <h3 id="detail-title" class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-0.5">상세 타이틀</h3>
+                        </div>
+                    </div>
+
+                    <!-- Step-by-Step Action Guide -->
+                    <div class="mb-10">
+                        <h4 class="text-base sm:text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-list-ol text-blue-600"></i> 단계별 행동 요령
+                        </h4>
+                        <div id="detail-steps" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Steps rendered via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Evidence Checklist Section -->
+                    <div id="checklist-section" class="mb-10 pt-8 border-t border-slate-100">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                            <h4 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-square-check text-blue-600"></i> 증거 수집 체크리스트 (직접 체크해보세요)
+                            </h4>
+                            <span id="detail-checklist-progress" class="text-xs font-bold text-white bg-blue-600 px-3.5 py-1.5 rounded-full self-start sm:self-auto shadow-xs">0/3 완료</span>
+                        </div>
+                        <!-- 진행률 바 -->
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-4">
+                            <div id="detail-checklist-bar" class="bg-blue-600 h-full transition-all duration-300 rounded-full" style="width: 0%;"></div>
+                        </div>
+                        <div id="detail-checklist-items" class="space-y-3">
+                            <!-- Checklist rendered via JS -->
+                        </div>
+                    </div>
+
+                    <!-- FAQ Section -->
+                    <div id="faq-section" class="mb-10 pt-8 border-t border-slate-100">
+                        <h4 class="text-base sm:text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-question text-blue-600"></i> 대한변협 연계 FAQ (자주 묻는 질문)
+                        </h4>
+                        <div id="detail-faq-container" class="space-y-3">
+                            <!-- FAQs rendered via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Official Forms & Links Section (표준 진정서 양식 모달 및 다운로드 연계) -->
+                    <div id="forms-section" class="pt-6 border-t border-slate-100 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-blue-50/70 p-6 rounded-2xl border border-blue-100">
+                        <div>
+                            <h5 class="text-base font-extrabold text-slate-900 mb-1">대한변호사협회 공식 진정 신청 및 표준 서식</h5>
+                            <p class="text-xs sm:text-sm text-slate-600">표준 진정서 양식을 미리보고 복사하거나 텍스트 파일로 바로 다운로드하실 수 있습니다.</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+                            <button onclick="openTemplateModal('petition')" class="flex-1 sm:flex-none bg-white hover:bg-slate-50 text-blue-700 px-4 py-2.5 rounded-xl text-xs font-bold transition-all border border-blue-200 flex items-center justify-center gap-2 shadow-xs">
+                                <i class="fa-solid fa-eye"></i> 표준 진정서 미리보기
+                            </button>
+                            <button onclick="downloadTemplateTxt('petition')" class="flex-1 sm:flex-none bg-white hover:bg-slate-50 text-slate-700 px-4 py-2.5 rounded-xl text-xs font-bold transition-all border border-slate-200 flex items-center justify-center gap-2 shadow-xs">
+                                <i class="fa-solid fa-download text-blue-600"></i> 진정서 양식 다운로드
+                            </button>
+                            <a href="https://www.koreanbar.or.kr" target="_blank" rel="noopener noreferrer" class="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> 대한변협 민원페이지
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-100 border-t border-slate-200 py-12 text-slate-600 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-xs">
+                    <i class="fa-solid fa-scale-balanced text-sm"></i>
+                </div>
+                <span class="font-extrabold text-slate-900 tracking-tight">법률피해 구제 센터</span>
+            </div>
+            <p class="text-xs text-center md:text-left text-slate-500 leading-relaxed">
+                본 서비스는 일반 국민들의 변호사 관련 분쟁 이해와 진정 절차 준비를 돕기 위한 맞춤형 정보 제공용 가이드입니다.<br class="hidden sm:inline" /> 정확한 법률 자문은 대한변호사협회 또는 대한법률구조공단을 통해 확인하시기 바랍니다.
+            </p>
+            <div class="text-xs text-slate-400 font-medium">
+                &copy; 2026 Legal Victim Relief Center. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==========================================
+         모달 1: 표준 진정서 및 최고서 양식 미리보기/복사 모달
+         ========================================== -->
+    <div id="template-modal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 modal-animate max-h-[90vh] flex flex-col">
+            <div class="flex items-start justify-between border-b border-slate-100 pb-4 mb-4 shrink-0">
+                <div>
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <span class="inline-block px-2.5 py-0.5 rounded-md bg-blue-600 text-white text-xs font-bold">공식 표준 서식</span>
+                        <!-- 양식 전환 탭 버튼 -->
+                        <div class="inline-flex rounded-lg bg-slate-100 p-0.5 text-xs font-bold">
+                            <button type="button" id="tab-petition" onclick="switchTemplateTab('petition')" class="px-2.5 py-1 rounded-md bg-white text-blue-600 shadow-xs transition-all">표준 진정서</button>
+                            <button type="button" id="tab-demand" onclick="switchTemplateTab('demand')" class="px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900 transition-all">해지 최고서</button>
+                        </div>
+                    </div>
+                    <h3 id="tpl-modal-title" class="text-lg sm:text-xl font-extrabold text-slate-900">서식 제목</h3>
+                </div>
+                <button onclick="closeTemplateModal()" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto flex-1 mb-5 pr-1">
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5">
+                    <pre id="tpl-modal-content" class="whitespace-pre-wrap font-sans text-xs sm:text-sm text-slate-800 leading-relaxed"></pre>
+                </div>
+                <p id="tpl-modal-tip" class="mt-3 text-xs text-blue-800 bg-blue-50 border border-blue-200 rounded-xl p-3.5 leading-relaxed font-medium">
+                    작성 팁
+                </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-2.5 shrink-0">
+                <button onclick="copyTemplateText()" class="flex-1 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition-colors flex items-center justify-center gap-2 shadow-sm">
+                    <i class="fa-regular fa-copy"></i> 양식 텍스트 전체 복사하기
+                </button>
+                <button onclick="downloadCurrentTemplateTxt()" class="py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-sm font-bold transition-colors flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-download text-blue-600"></i> .txt 파일 다운로드
+                </button>
+                <button onclick="closeTemplateModal()" class="py-3 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 text-sm font-semibold transition-colors">
+                    닫기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         모달 2: 긴급 민원 진정 지원 신청 모달
+         ========================================== -->
+    <div id="consultModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
+        <div class="bg-white border border-slate-200 rounded-3xl max-w-lg w-full p-6 md:p-8 relative shadow-2xl modal-animate">
+            <button onclick="closeModal('consultModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 text-lg p-1.5 rounded-lg hover:bg-slate-100">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg border border-blue-100">
+                    <i class="fa-solid fa-file-pen"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-extrabold text-slate-900">긴급 민원 진정 지원 신청</h3>
+                    <p class="text-xs text-slate-500">필수 정보를 남겨주시면 맞춤 진정서 작성 가이드를 안내해 드립니다.</p>
+                </div>
+            </div>
+            <form onsubmit="handleFormSubmit(event)" class="space-y-4 mt-6">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">신청자 성명</label>
+                    <input type="text" required placeholder="홍길동" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">연락처 (휴대폰)</label>
+                    <input type="tel" required placeholder="010-0000-0000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">피해 내용 요약</label>
+                    <textarea rows="3" required placeholder="변호사와 발생한 갈등 내용을 간략히 적어주세요." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-colors"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl text-sm font-bold transition-all shadow-md shadow-blue-600/20">
+                    진정서 작성 지원 신청하기
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Data & Interactivity -->
+    <script>
+        // 1. 5가지 갈등 유형 상세 데이터 (법률피해 구제 센터 기존 데이터)
+        const situationData = {
+            1: {
+                title: "수임료/착수금 반환 및 정산 갈등 대응 절차",
+                icon: "fa-won-sign",
+                steps: [
+                    { num: "01", title: "위임 계약서 및 영수증 확보", desc: "체결한 선임계약서와 지급한 수임료 입금 영수증, 세금계산서를 모두 수집합니다." },
+                    { num: "02", title: "정산 내역 및 업무 처리 확인", desc: "실제 진행된 소송 절차와 투입된 업무량 대비 정산 요청 공문을 내용증명으로 발송합니다." },
+                    { num: "03", title: "대한변협 진정 및 조정 신청", desc: "환급 거부 시 대한변호사협회 진정 또는 소비자원 분쟁조정, 민사소송을 제기합니다." }
+                ],
+                checklist: [
+                    "변호사 선임계약서 및 약관 사본",
+                    "수임료 및 실비 입금 내역 (계좌이체 영수증 등)",
+                    "변호사 측과 나눈 통화 녹음 또는 문자/카카오톡 대화 캡처"
+                ],
+                faqs: [
+                    { q: "중도 해지 시 착수금 전액을 돌려받을 수 있나요?", a: "전액 환불은 어렵지만, 변호사법 및 위임 계약에 따라 이미 수행한 업무량과 사건 진행 정도에 비례하여 정당한 잔액을 반환받을 수 있습니다." },
+                    { q: "변호사가 연락을 피하고 정산을 거부하면 어떻게 하나요?", a: "내용증명을 통해 반환을 공식적으로 요구하고, 불응 시 대한변호사협회 민원 신청이나 법적 절차로 대응할 수 있습니다." }
+                ]
+            },
+            2: {
+                title: "사건 방치 및 불성실한 변론 대응 절차",
+                icon: "fa-user-slash",
+                steps: [
+                    { num: "01", title: "연락 시도 기록 및 내용증명", desc: "수차례 연락을 시도했으나 두절된 기록(통화기록, 문자 등)을 남기고 내용증명을 발송합니다." },
+                    { num: "02", title: "법원 사건 진행 내역 조회", desc: "나의 사건검색을 통해 실제로 재판 기일에 불참했거나 서면 제출이 누락되었는지 확인합니다." },
+                    { num: "03", title: "사임 요구 및 대한변협 진정", desc: "신뢰 관계가 파탄된 변호사의 사임을 요구하고, 불성실 변론에 대해 대한변협에 징계 진정을 제기합니다." }
+                ],
+                checklist: [
+                    "법원 사건진행내역 조회 결과 캡처",
+                    "변호사 사무실에 남긴 연락 및 부재중 기록",
+                    "내용증명 발송 사본 및 우체국 등기 송부 확인서"
+                ],
+                faqs: [
+                    { q: "변호사가 계속 연락이 안 되면 사임 처리할 수 있나요?", a: "위임 계약 해지 통보 및 사임서 제출을 요구할 수 있으며, 거부 시 소송대리인 해임신고서를 법원에 직접 제출할 수 있습니다." },
+                    { q: "기일 불참으로 피해를 입었을 경우 배상을 받을 수 있나요?", a: "변호사의 고의 또는 과실로 인해 재판에서 패소하거나 불이익을 입은 경우 손해배상 청구가 가능합니다." }
+                ]
+            },
+            3: {
+                title: "성실의무 위반 및 부실 변론 대응 절차",
+                icon: "fa-file-circle-exclamation",
+                steps: [
+                    { num: "01", title: "제출된 서면 및 증거 검토", desc: "법원에 제출된 준비서면과 증거목록을 발급받아 부실 여부를 객관적으로 분석합니다." },
+                    { num: "02", title: "소명 요구 및 항의 공문 발송", desc: "변호사에게 부실 변론에 대한 해명을 요구하고 공식 항의 공문을 전달합니다." },
+                    { num: "03", title: "대리인 교체 및 징계 진정", desc: "신뢰 회복이 불가능할 경우 대리인을 교체하고 변호사협회에 징계 진정서를 제출합니다." }
+                ],
+                checklist: [
+                    "법원 제출 서면(준비서면, 증거신청서 등) 일체",
+                    "의뢰인이 제공했으나 누락된 증거 자료 목록",
+                    "변호사와의 상담 내용 및 자문 녹취록"
+                ],
+                faqs: [
+                    { q: "부실 변론 기준은 무엇인가요?", a: "변호사로서 마땅히 제출해야 할 증거를 고의나 중대한 과실로 누락하여 의뢰인에게 실질적인 불이익을 준 경우에 해당합니다." }
+                ]
+            },
+            4: {
+                title: "추가 비용 및 성공보수 무단 요구 대응 절차",
+                icon: "fa-hand-holding-dollar",
+                steps: [
+                    { num: "01", title: "초기 계약 내용 및 약정 확인", desc: "최초 체결한 위임 계약서 상에 추가 비용이나 성공보수 조항이 명시되어 있는지 확인합니다." },
+                    { num: "02", title: "무단 청구 거부 의사 표시", desc: "계약에 없는 추가 비용 요구에 대해 서면으로 명확한 거부 의사를 밝힙니다." },
+                    { num: "03", title: "변호사협회 신고 및 법적 대응", desc: "부당 이익 취득 및 강요 행위에 대해 대한변협에 신고하고 법적 구제를 요청합니다." }
+                ],
+                checklist: [
+                    "최초 위임 계약서 및 약정서 원본",
+                    "추가 비용 및 성공보수 요구 문자/녹취 파일",
+                    "추가 지급한 금액이 있는 경우 송금 내역서"
+                ],
+                faqs: [
+                    { q: "계약서에 없는 성공보수를 달라고 합니다. 줘야 하나요?", a: "계약서에 명시되지 않은 성공보수나 추가 비용은 법적 구속력이 없으며 지급할 의무가 없습니다." }
+                ]
+            },
+            5: {
+                title: "비밀유지 위반 및 이해충돌 대응 절차",
+                icon: "fa-user-secret",
+                steps: [
+                    { num: "01", title: "비밀 누설 및 이해충돌 증거 수집", desc: "변호사가 의뢰인의 비밀을 유출하거나 상대방 측 변호를 맡은 정황 증거를 확보합니다." },
+                    { num: "02", title: "즉시 계약 해지 통보", desc: "비밀유지 의무 및 윤리장전 위반을 사유로 즉시 계약 해지를 통보합니다." },
+                    { num: "03", title: "대한변협 엄중 징계 진정", desc: "변호사의 윤리적 결격 사유에 대해 대한변협 윤리위원회에 엄중한 징계를 요청합니다." }
+                ],
+                checklist: [
+                    "비밀 누설이 발생했음을 입증할 수 있는 자료",
+                    "상대방 측 소송대리인 선임계 고소장 확인서",
+                    "변호사와 주고받은 비밀 유지 관련 협의 내용"
+                ],
+                faqs: [
+                    { q: "상대방 변호사가 내 비밀을 알고 협박합니다.", a: "즉시 변호사협회에 신고 및 징계 진정을 제기할 수 있으며, 형사상 비밀누설죄 고소 검토가 가능합니다." }
+                ]
+            }
+        };
+
+        // 2. 표준 진정서 및 위임계약 해지 최고서 양식 데이터 (바른변호 통합 데이터)
+        const templateSamples = {
+            petition: {
+                fileName: '변호사_징계_진정서_표준양식.txt',
+                title: '변호사 징계 진정서 표준 양식 (지방변호사회 제출용)',
+                content: `진     정     서
+
+1. 진정인 (의뢰인)
+  - 성    명: 홍 길 동
+  - 생년월일: 1985. 05. 15.
+  - 주    소: 서울특별시 OO구 OO로 00, 101동 101호
+  - 연 락 처: 010-0000-0000
+
+2. 피진정인 (대상 변호사)
+  - 성    명: 김 O O 변호사 (소속: OOOO지방변호사회)
+  - 사무소명: 법무법인 OO (또는 OO법률사무소)
+  - 사무소 주소: 서울특별시 서초구 서초대로 000, O층
+
+3. 진정 취지
+  피진정인 김OO 변호사의 변호사법 제24조(품위유지의무) 및 변호사윤리장전 제18조(성실의무) 위반 행위에 대하여 철저히 조사하시어 엄중한 징계 처분을 내려주시기 바랍니다.
+
+4. 진정 원인 (구체적 위반 사실)
+  가. 사건 위임 경위
+    진정인은 2026년 O월 O일 피진정인과 위임계약을 체결하고, 같은 날 착수금 일금 0,000,000원을 피진정인 명의 계좌로 송금하였습니다(증 제1호증 위임계약서, 증 제2호증 계좌이체확인증).
+
+  나. 피진정인의 위법·부당 행위
+    그러나 피진정인은 계약 체결 이후 소장(또는 준비서면)을 전혀 제출하지 아니하였고, 변론기일에도 정당한 사유 없이 불출석하였습니다. 또한 진정인의 수차례 연락을 의도적으로 회피하였습니다.
+
+  다. 결론
+    피진정인의 위와 같은 행위는 변호사법이 정한 성실의무 및 품위유지의무를 현저히 위반한 것이므로, 관련 규정에 따라 징계 조치를 취하여 주시기 바랍니다.
+
+5. 입증 방법 (첨부 서류)
+  - 증 제1호증: 사건 위임계약서 사본 1부
+  - 증 제2호증: 착수금 계좌이체 확인증 1부
+  - 증 제3호증: 대법원 나의 사건검색 진행내역서 1부
+  - 증 제4호증: 문자메시지 및 통화 발신 내역 캡처 1부
+
+2026년   O월   O일
+진정인  홍 길 동  (서명 또는 날인)
+
+OOOO지방변호사회장 귀하`,
+                tip: '💡 작성 팁: 진정서 원본과 첨부 증거 사본을 정리하여 피진정 변호사가 소속된 지방변호사회에 방문 또는 등기우편으로 접수하세요.'
+            },
+            demand: {
+                fileName: '위임계약_해지_및_반환_최고서.txt',
+                title: '위임계약 해지 및 착수금 반환 최고서 (내용증명용)',
+                content: `최   고   서 (내용증명)
+
+수신인(피위임인): 김 O O 변호사 (OOOO법률사무소)
+주          소: 서울특별시 서초구 서초대로 000, O층
+
+발신인(위임인): 홍 길 동
+주          소: 서울특별시 OO구 OO로 00, 101동 101호
+연    락    처: 010-0000-0000
+
+제목: 위임사무 불이행에 따른 사건 위임계약 해지 통보 및 착수금 반환 요청의 건
+
+1. 발신인은 2026년 O월 O일 수신인과 소송위임계약을 체결하고 착수금 일금 0,000,000원을 지급한 바 있습니다.
+2. 그러나 수신인은 위임계약 체결 이후 현재까지 약정된 서면 작성 등 기본적인 위임사무를 이행하지 아니하였고, 연락을 회피하여 상호 신뢰관계가 파탄되었습니다.
+3. 이에 발신인은 본 서면의 도달로써 위 사건 위임계약을 공식적으로 해지하며, 본 서면 수령일로부터 7일 이내에 기지급한 착수금 전액(일금 0,000,000원)을 반환하여 주시기 바랍니다.
+4. 만약 기한 내 반환되지 않을 경우, 소속 지방변호사회 징계 진정 및 민사상 부당이득반환 청구 소송을 진행할 예정임을 알려드립니다.
+
+2026년   O월   O일
+발신인  홍 길 동  (인)`,
+                tip: '💡 발송 안내: 동일한 문서 3부를 출력하여 우체국 창구에서 내용증명으로 발송하세요.'
+            }
+        };
+
+        let currentId = 1;
+        let currentTemplateKey = 'petition';
+        let checkedState = {
+            1: [false, false, false],
+            2: [false, false, false],
+            3: [false, false, false],
+            4: [false, false, false],
+            5: [false, false, false]
+        };
+
+        // 상세 뷰 전환
+        function selectAndGoDetail(id) {
+            currentId = id;
+            if (!checkedState[id]) {
+                checkedState[id] = [false, false, false];
+            }
+            renderDetailContent(id);
+
+            document.getElementById('main-view').classList.add('hidden');
+            document.getElementById('detail-view').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 메인 뷰 복귀
+        function showMainView() {
+            document.getElementById('detail-view').classList.add('hidden');
+            document.getElementById('main-view').classList.remove('hidden');
+        }
+
+        // 상세 콘텐츠 렌더링
+        function renderDetailContent(id) {
+            const data = situationData[id];
+            document.getElementById('detail-icon').innerHTML = `<i class="fa-solid ${data.icon}"></i>`;
+            document.getElementById('detail-title').innerText = data.title;
+
+            // 단계별 행동 요령 렌더링
+            const stepsContainer = document.getElementById('detail-steps');
+            stepsContainer.innerHTML = data.steps.map(step => `
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 hover:border-blue-300 transition-colors">
+                    <span class="text-xs font-bold text-white bg-blue-600 px-2.5 py-1 rounded-full mb-3 inline-block">STEP ${step.num}</span>
+                    <h5 class="text-sm sm:text-base font-bold text-slate-900 mb-2">${step.title}</h5>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">${step.desc}</p>
+                </div>
+            `).join('');
+
+            // 체크리스트 렌더링
+            renderDetailChecklist(id);
+
+            // FAQ 아코디언 렌더링
+            const faqContainer = document.getElementById('detail-faq-container');
+            faqContainer.innerHTML = data.faqs.map((faq, index) => `
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden">
+                    <button onclick="toggleFaq(${index})" class="w-full px-5 py-4 text-left font-bold text-sm text-slate-800 flex items-center justify-between hover:bg-slate-100/70 transition-colors">
+                        <span class="flex items-center gap-2.5"><span class="text-blue-600 font-extrabold">Q.</span> ${faq.q}</span>
+                        <i id="faq-icon-${index}" class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200"></i>
+                    </button>
+                    <div id="faq-body-${index}" class="hidden px-5 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/80 pt-3 bg-white">
+                        <span class="text-blue-600 font-extrabold mr-1.5">A.</span> ${faq.a}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 상세 페이지 체크리스트 렌더링 및 진행률 업데이트
+        function renderDetailChecklist(id) {
+            const data = situationData[id];
+            const checks = checkedState[id];
+            const completedCount = checks.filter(Boolean).length;
+            const totalCount = data.checklist.length;
+            const percent = Math.round((completedCount / totalCount) * 100);
+            
+            document.getElementById('detail-checklist-progress').innerText = `${completedCount}/${totalCount} 완료 (${percent}%)`;
+            document.getElementById('detail-checklist-bar').style.width = `${percent}%`;
+
+            const checklistContainer = document.getElementById('detail-checklist-items');
+            checklistContainer.innerHTML = data.checklist.map((item, idx) => `
+                <label class="flex items-center gap-3.5 bg-slate-50 border ${checks[idx] ? 'border-blue-400 bg-blue-50/40' : 'border-slate-200'} hover:border-blue-400 p-4 rounded-2xl cursor-pointer transition-all select-none">
+                    <input type="checkbox" ${checks[idx] ? 'checked' : ''} onchange="toggleCheck(${id}, ${idx})" class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600 cursor-pointer">
+                    <span class="text-xs sm:text-sm ${checks[idx] ? 'text-blue-900 font-bold' : 'text-slate-700 font-medium'}">${item}</span>
+                </label>
+            `).join('');
+        }
+
+        function toggleCheck(id, idx) {
+            checkedState[id][idx] = !checkedState[id][idx];
+            renderDetailChecklist(id);
+            if (checkedState[id].every(Boolean)) {
+                showToast('모든 증거 수집 항목을 확인하셨습니다! 표준 진정서 작성을 진행해보세요.');
+            }
+        }
+
+        function toggleFaq(index) {
+            const body = document.getElementById(`faq-body-${index}`);
+            const icon = document.getElementById(`faq-icon-${index}`);
+            body.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+
+        // 표준 진정서 & 해지 최고서 모달 열기/전환/닫기
+        function openTemplateModal(key) {
+            currentTemplateKey = key || 'petition';
+            switchTemplateTab(currentTemplateKey);
+            const modal = document.getElementById('template-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function switchTemplateTab(key) {
+            currentTemplateKey = key;
+            const data = templateSamples[key];
+            if (!data) return;
+
+            document.getElementById('tpl-modal-title').textContent = data.title;
+            document.getElementById('tpl-modal-content').textContent = data.content;
+            document.getElementById('tpl-modal-tip').textContent = data.tip;
+
+            // 탭 버튼 스타일 업데이트
+            const tabPetition = document.getElementById('tab-petition');
+            const tabDemand = document.getElementById('tab-demand');
+            if (key === 'petition') {
+                tabPetition.className = 'px-2.5 py-1 rounded-md bg-white text-blue-600 shadow-xs transition-all';
+                tabDemand.className = 'px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900 transition-all';
+            } else {
+                tabDemand.className = 'px-2.5 py-1 rounded-md bg-white text-blue-600 shadow-xs transition-all';
+                tabPetition.className = 'px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900 transition-all';
+            }
+        }
+
+        function closeTemplateModal() {
+            const modal = document.getElementById('template-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // 클립보드 전체 복사 기능
+        function copyTemplateText() {
+            const text = document.getElementById('tpl-modal-content').textContent;
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('양식 텍스트가 클립보드에 복사되었습니다. 한글(HWP)이나 워드에 붙여넣어 사용하세요.');
+            } catch (err) {
+                showToast('복사에 실패했습니다. 본문을 직접 드래그하여 복사해 주세요.');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        // 텍스트 파일(.txt) 다운로드 기능
+        function downloadTemplateTxt(key) {
+            const data = templateSamples[key];
+            if (!data) return;
+            const blob = new Blob([data.content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = data.fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`'${data.fileName}' 파일 다운로드가 완료되었습니다.`);
+        }
+
+        function downloadCurrentTemplateTxt() {
+            downloadTemplateTxt(currentTemplateKey);
+        }
+
+        // 긴급 민원 지원 신청 모달 제어
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+            document.getElementById(modalId).classList.add('flex');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('flex');
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            closeModal('consultModal');
+            e.target.reset();
+            showToast('민원 진정 지원 신청이 정상 접수되었습니다. 담당 전문가가 곧 연락드립니다.');
+        }
+
+        // 토스트 알림 함수
+        let toastTimeout;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            toastMsg.innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3600);
+        }
+
+        // 모바일 메뉴 토글
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        function toggleMobileMenu() {
+            if (mobileMenu) {
+                mobileMenu.classList.add('hidden');
+            }
+        }
+
+        // 모달 배경 클릭 시 닫기
+        window.addEventListener('click', (e) => {
+            const tplModal = document.getElementById('template-modal');
+            const consultModal = document.getElementById('consultModal');
+            if (e.target === tplModal) closeTemplateModal();
+            if (e.target === consultModal) closeModal('consultModal');
+        });
+    </script>
+</body>
+</html>
